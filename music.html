@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tecu's repo • Music</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <h1 class="title">Tecu’s repo</h1>
+      <nav class="menu" aria-label="Main">
+        <a class="pill" href="music.html" aria-current="page">Music</a>
+        <a class="pill" href="games.html">Games</a>
+        <a class="pill" href="info.html">Info</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card">
+      <div class="row">
+        <h2>Music</h2>
+        <a class="link" href="index.html">← Home</a>
+      </div>
+
+      <p class="muted">
+        Drop your mp3 files into <code>assets/songs/</code>. Edit the song list in <code>app.js</code>.
+      </p>
+
+      <div id="songList" class="list"></div>
+
+      <div class="player card subtle">
+        <div class="player-meta">
+          <div class="label">Now playing</div>
+          <div id="nowPlaying" class="now">Nothing yet</div>
+        </div>
+        <audio id="audio" controls preload="none"></audio>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <span>© <span id="year"></span> Tecu</span>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

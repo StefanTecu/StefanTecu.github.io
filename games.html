@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tecu's repo • Games</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <h1 class="title">Tecu’s repo</h1>
+      <nav class="menu" aria-label="Main">
+        <a class="pill" href="music.html">Music</a>
+        <a class="pill" href="games.html" aria-current="page">Games</a>
+        <a class="pill" href="info.html">Info</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card">
+      <div class="row">
+        <h2>Games</h2>
+        <a class="link" href="index.html">← Home</a>
+      </div>
+
+      <p class="muted">
+        Browsers can’t run <code>.exe</code>/<code>.bat</code> directly. The normal approach is a download link.
+      </p>
+
+      <div class="grid">
+        <article class="game card subtle">
+          <h3>Football Betting Career (JavaFX)</h3>
+          <p class="muted">
+            Desktop build. Download and run locally.
+          </p>
+          <div class="actions">
+            <a class="pill" href="downloads/YourJavaFXGame.exe" download>Download</a>
+            <button class="pill ghost" id="howToRunBtn" type="button">How to run</button>
+          </div>
+        </article>
+      </div>
+
+      <div id="howToRun" class="card subtle hidden">
+        <h3>How to run</h3>
+        <ul>
+          <li>Download the file.</li>
+          <li>If Windows shows a warning: click <b>More info</b> → <b>Run anyway</b> (only if you trust the file).</li>
+          <li>If you ship a <code>.zip</code>, unzip it first, then run the <code>.exe</code>.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <span>© <span id="year"></span> Tecu</span>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
