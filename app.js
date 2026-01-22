@@ -5,30 +5,37 @@ const yearEl = document.getElementById("year");
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
 // -------------------- MUSIC DATA --------------------
-// Songs are stored in assets/music/ (NOT shown on the page).
+// Songs are stored in assets/music/ (file paths are NOT displayed on the page).
 const songs = [
-  { file: "assets/music/song1.mp3",  name: "Jawbreak'r",          artist: "Tec-17",         stage: "Released", version: "v1",   releaseDate: "10.07.2024" },
-  { file: "assets/music/song2.mp3",  name: "Fumez Tigari",        artist: "Vintage Angels", stage: "Demo",     version: "v0.3", releaseDate: "TBD" },
-  { file: "assets/music/song3.mp3",  name: "Plastic/Consumator",  artist: "Vintage Angels", stage: "Demo",     version: "v0.2", releaseDate: "TBD" },
-  { file: "assets/music/song4.mp3",  name: "Sex In Minecraft",    artist: "Vintage Angels", stage: "Demo",     version: "v0.3", releaseDate: "TBD" },
-  { file: "assets/music/song5.mp3",  name: "O zic (IA)",          artist: "Tecu",           stage: "Demo",     version: "v0.5", releaseDate: "TBD" },
-  { file: "assets/music/song6.mp3",  name: "Jumatati De Masura",  artist: "Tecu",           stage: "Demo",     version: "v0.4", releaseDate: "TBD" },
-  { file: "assets/music/song7.mp3",  name: "Sick bong, dude",     artist: "Moartea",        stage: "Demo",     version: "v0.7", releaseDate: "TBD" },
-  { file: "assets/music/song8.mp3",  name: "dezastru",            artist: "Tecu",           stage: "Finished", version: "v1",   releaseDate: "TBD" },
-  { file: "assets/music/song9.mp3",  name: "Nu Te Vrem",          artist: "Tecu",           stage: "Demo",     version: "v0.6", releaseDate: "TBD" },
-  { file: "assets/music/song10.mp3", name: "Universal Madness",   artist: "Tec-17",         stage: "Finished", version: "v1",   releaseDate: "TBD" },
+  { file: "assets/music/song1.mp3",  name: "Jawbreak'r",         artist: "Tec-17",         stage: "Released", version: "v1",   releaseDate: "10.07.2024" },
+  { file: "assets/music/song2.mp3",  name: "Fumez Tigari",       artist: "Vintage Angels", stage: "Demo",     version: "v0.3", releaseDate: "TBD" },
+  { file: "assets/music/song3.mp3",  name: "Plastic/Consumator", artist: "Vintage Angels", stage: "Demo",     version: "v0.2", releaseDate: "TBD" },
+  { file: "assets/music/song4.mp3",  name: "Sex In Minecraft",   artist: "Vintage Angels", stage: "Demo",     version: "v0.3", releaseDate: "TBD" },
+  { file: "assets/music/song5.mp3",  name: "O zic (IA)",         artist: "Tecu",           stage: "Demo",     version: "v0.5", releaseDate: "TBD" },
+  { file: "assets/music/song6.mp3",  name: "Jumatati De Masura", artist: "Tecu",           stage: "Demo",     version: "v0.4", releaseDate: "TBD" },
+  { file: "assets/music/song7.mp3",  name: "Sick bong, dude",    artist: "Moartea",        stage: "Demo",     version: "v0.7", releaseDate: "TBD" },
+  { file: "assets/music/song8.mp3",  name: "dezastru",           artist: "Tecu",           stage: "Finished", version: "v1",   releaseDate: "TBD" },
+  { file: "assets/music/song9.mp3",  name: "Nu Te Vrem",         artist: "Tecu",           stage: "Demo",     version: "v0.6", releaseDate: "TBD" },
+  { file: "assets/music/song10.mp3", name: "Universal Madness",  artist: "Tec-17",         stage: "Finished", version: "v1",   releaseDate: "TBD" },
 ];
 
-// -------------------- MUSIC PAGE LOGIC --------------------
+// -------------------- MUSIC PAGE ELEMENTS --------------------
 const tbodyEl = document.getElementById("songTbody");
 const tableEl = document.getElementById("songTable");
 const audioEl = document.getElementById("audio");
 const nowPlayingEl = document.getElementById("nowPlaying");
+const playHintEl = document.getElementById("playHint");
+
+// Top glide bar
+const tableWrapEl = document.getElementById("tableWrap");
+const tableScrollerEl = document.getElementById("tableScroller");
+const tableScrollerInnerEl = document.getElementById("tableScrollerInner");
 
 // Sorting state
 let sortKey = "name";
 let sortDir = "asc"; // "asc" | "desc"
 
+// -------------------- HELPERS --------------------
 function normalizeStr(v) {
   return String(v ?? "").trim().toLowerCase();
 }
@@ -97,22 +104,32 @@ function updateSortIcons() {
     const key = th.getAttribute("data-key");
     if (!icon) return;
 
-    if (key === sortKey) {
-      icon.textContent = sortDir === "asc" ? "▲" : "▼";
-    } else {
-      icon.textContent = "";
-    }
+    if (key === sortKey) icon.textContent = sortDir === "asc" ? "▲" : "▼";
+    else icon.textContent = "";
   });
 }
 
+// -------------------- PLAYBACK --------------------
 function playSong(song) {
   if (!audioEl || !nowPlayingEl) return;
 
+  // Set source
   audioEl.src = song.file;
+
+  // Update display
   nowPlayingEl.textContent = `${song.name} • ${song.artist} • ${song.stage} ${song.version} • ${song.releaseDate}`;
-  audioEl.play().catch(() => {});
+
+  // Try to play (button click counts as a user gesture on mobile)
+  const p = audioEl.play();
+  if (p && typeof p.catch === "function") {
+    p.catch(() => {
+      // Some browsers still require tapping the audio control once.
+      if (playHintEl) playHintEl.classList.remove("hidden");
+    });
+  }
 }
 
+// -------------------- TABLE RENDER --------------------
 function renderSongTable() {
   if (!tbodyEl) return;
 
@@ -154,9 +171,48 @@ function renderSongTable() {
 
     tbodyEl.appendChild(tr);
   });
+
+  // After render, refresh scroller sizing
+  syncScrollerSize();
 }
 
-// Hook header clicks (sorting)
+// -------------------- TOP GLIDE BAR (SCROLL SYNC) --------------------
+let syncingFromTop = false;
+let syncingFromTable = false;
+
+function syncScrollerSize() {
+  if (!tableEl || !tableWrapEl || !tableScrollerInnerEl || !tableScrollerEl) return;
+
+  // Make inner div match table width so the top bar scrolls the same distance
+  const tableWidth = tableEl.scrollWidth;
+  tableScrollerInnerEl.style.width = `${tableWidth}px`;
+
+  // Show top scroller only if horizontal overflow exists
+  const needs = tableWidth > tableWrapEl.clientWidth + 2;
+  tableScrollerEl.classList.toggle("hidden", !needs);
+}
+
+function hookScrollSync() {
+  if (!tableWrapEl || !tableScrollerEl) return;
+
+  tableScrollerEl.addEventListener("scroll", () => {
+    if (syncingFromTable) return;
+    syncingFromTop = true;
+    tableWrapEl.scrollLeft = tableScrollerEl.scrollLeft;
+    syncingFromTop = false;
+  });
+
+  tableWrapEl.addEventListener("scroll", () => {
+    if (syncingFromTop) return;
+    syncingFromTable = true;
+    tableScrollerEl.scrollLeft = tableWrapEl.scrollLeft;
+    syncingFromTable = false;
+  });
+
+  window.addEventListener("resize", syncScrollerSize);
+}
+
+// -------------------- INIT (MUSIC PAGE) --------------------
 if (tableEl) {
   const sortableHeaders = tableEl.querySelectorAll("th.sortable");
   sortableHeaders.forEach((th) => {
@@ -168,6 +224,7 @@ if (tableEl) {
 
   renderSongTable();
   updateSortIcons();
+  hookScrollSync();
 }
 
 // -------------------- GAMES PAGE (unchanged behavior) --------------------
