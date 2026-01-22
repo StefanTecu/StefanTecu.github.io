@@ -26,10 +26,37 @@
       </div>
 
       <p class="muted">
-        Drop your mp3 files into <code>assets/songs/</code>. Edit the song list in <code>app.js</code>.
+        Songs live in <code>assets/songs/</code>. This table can be sorted by clicking headers.
       </p>
 
-      <div id="songList" class="list"></div>
+      <div class="tableWrap">
+        <table class="songTable" id="songTable" aria-label="Songs">
+          <thead>
+            <tr>
+              <th class="sortable" data-key="name" scope="col">
+                Name <span class="sortIcon" aria-hidden="true"></span>
+              </th>
+              <th class="sortable" data-key="artist" scope="col">
+                Artist/s <span class="sortIcon" aria-hidden="true"></span>
+              </th>
+              <th class="sortable" data-key="stage" scope="col">
+                Stage <span class="sortIcon" aria-hidden="true"></span>
+              </th>
+              <th class="sortable" data-key="version" scope="col">
+                Version <span class="sortIcon" aria-hidden="true"></span>
+              </th>
+              <th class="sortable" data-key="releaseDate" scope="col">
+                Release Date <span class="sortIcon" aria-hidden="true"></span>
+              </th>
+              <th scope="col">Play</th>
+            </tr>
+          </thead>
+
+          <tbody id="songTbody">
+            <!-- JS renders rows -->
+          </tbody>
+        </table>
+      </div>
 
       <div class="player card subtle">
         <div class="player-meta">
