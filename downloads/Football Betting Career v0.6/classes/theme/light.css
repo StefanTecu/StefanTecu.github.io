@@ -1,0 +1,32 @@
+.root {
+    -fx-base: #f4f4f4;
+    -fx-background: #f4f4f4;
+    -fx-control-inner-background: white;
+    -fx-accent: #2b6cff;
+    -fx-focus-color: #2b6cff;
+    -fx-faint-focus-color: rgba(43,108,255,0.25);
+
+    -fx-text-fill: #111;
+}
+
+.label { -fx-text-fill: #111; }
+/* =========================
+   ACHIEVEMENTS (LIGHT THEME)
+   ========================= */
+
+.label.ach-title {
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+}
+
+.label.ach-desc {
+    -fx-font-size: 13px;
+}
+
+.label.ach-unlocked {
+    -fx-text-fill: #2e8b57; /* readable green on white */
+}
+
+.label.ach-locked {
+    -fx-text-fill: #999999;
+}

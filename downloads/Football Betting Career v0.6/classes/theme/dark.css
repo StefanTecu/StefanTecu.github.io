@@ -1,0 +1,52 @@
+.root {
+    -fx-base: #1e1f22;
+    -fx-background: #1e1f22;
+    -fx-control-inner-background: #26282c;
+    -fx-accent: #4c8dff;
+    -fx-focus-color: #4c8dff;
+    -fx-faint-focus-color: rgba(76,141,255,0.25);
+
+    -fx-text-fill: #e7e7e7;
+}
+
+.label { -fx-text-fill: #e7e7e7; }
+.button { -fx-background-color: #2f3136; -fx-text-fill: #e7e7e7; }
+.button:hover { -fx-background-color: #3a3d44; }
+
+.text-area, .text-field, .list-view, .table-view {
+    -fx-control-inner-background: #26282c;
+    -fx-background-color: #26282c;
+    -fx-text-fill: #e7e7e7;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #2f3136;
+}
+
+.combo-box-base, .combo-box-popup .list-view {
+    -fx-background-color: #26282c;
+    -fx-control-inner-background: #26282c;
+}
+/* =========================
+   ACHIEVEMENTS (DARK THEME)
+   ========================= */
+
+.label.ach-title {
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+}
+
+.label.ach-desc {
+    -fx-font-size: 13px;
+}
+
+/* unlocked must OVERRIDE .label */
+.label.ach-unlocked {
+    -fx-text-fill: #32cd32; /* lime green */
+}
+
+/* locked */
+.label.ach-locked {
+    -fx-text-fill: #777777;
+}
+
