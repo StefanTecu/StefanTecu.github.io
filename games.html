@@ -35,9 +35,24 @@
         <article class="game card subtle">
           <h3>Football Betting Career (Requires JavaFX)</h3>
           <p class="muted">Desktop build. Download and run .bat locally.</p>
+
           <div class="actions">
-            <a class="pill" href="downloads/YourJavaFXGame.exe" download>Download</a>
+            <a class="pill" id="downloadBtn" href="downloads/Football%20Betting%20Career%20v0.6.rar" download>Download</a>
             <button class="pill ghost" id="howToRunBtn" type="button">How to run</button>
+          </div>
+
+          <p class="muted" style="margin-top:10px;">
+            Or click this link mor manual download:
+            <a class="link" id="manualDownloadLink" href="https://stefantecu.github.io/downloads/Football%20Betting%20Career%20v0.6.rar" target="_blank" rel="noopener noreferrer">
+              https://stefantecu.github.io/downloads/Football%20Betting%20Career%20v0.6.rar
+            </a>
+          </p>
+
+          <div class="actions" style="margin-top:10px;">
+            <button class="pill ghost copyBtn" id="copyDownloadBtn" type="button" data-copy="https://stefantecu.github.io/downloads/Football%20Betting%20Career%20v0.6.rar">
+              📋 Copy download link
+            </button>
+            <span class="muted tiny hidden" id="copyStatus">Copied!</span>
           </div>
         </article>
       </div>
