@@ -37,11 +37,11 @@ body{
   margin: 0 auto;
 }
 
+/* ✅ NON-TRANSPARENT HEADER */
 .top{
   position: sticky;
   top: 0;
-  backdrop-filter: blur(10px);
-  background: rgba(11,16,32,.60);
+  background: #0b1020; /* solid */
   border-bottom: 1px solid var(--stroke);
   z-index: 5;
 }
@@ -159,7 +159,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
   flex-wrap: wrap;
 }
 
-/* Stylish chips */
 .chip{
   padding: 8px 14px;
   border-radius: 999px;
@@ -183,7 +182,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
   box-shadow: 0 0 0 3px rgba(120,170,255,.14);
 }
 
-/* Shuffle toggle styled */
 .toggle{
   display: inline-flex;
   align-items: center;
@@ -204,7 +202,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
 
 .swipeHint{ margin-top: 8px; opacity: .9; }
 
-/* Table glide bar */
 .tableScroller{
   margin-top: 12px;
   border-radius: 12px;
@@ -216,7 +213,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
 }
 .tableScrollerInner{ height: 1px; }
 
-/* Table */
 .tableWrap{
   margin-top: 10px;
   border-radius: 14px;
@@ -260,13 +256,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
   opacity: .75;
 }
 
-/* Keyboard selection */
 .songTable tbody tr.selected{
   outline: 2px solid rgba(120,170,255,.45);
   outline-offset: -2px;
 }
 
-/* Playing row highlight */
 .songTable tbody tr.playing{
   background: rgba(140,190,255,.10);
   box-shadow: inset 0 0 0 1px rgba(140,190,255,.18);
@@ -288,7 +282,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
   color: rgba(255,255,255,.86);
 }
 
-/* Stylish Play/Pause button */
 .playBtn{
   min-width: 86px;
   padding: 9px 16px;
@@ -319,7 +312,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
   cursor: not-allowed;
 }
 
-/* Player */
 .player{ margin-top: 14px; display: grid; gap: 10px; }
 .playerTop{
   display: flex;
@@ -339,7 +331,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
   white-space: nowrap;
 }
 
-/* Sticky player (mobile only) */
 @media (max-width: 720px){
   body{ padding-bottom: 130px; }
   .playerSticky{
@@ -353,7 +344,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
   }
 }
 
-/* Drawer */
 .drawerOverlay{
   position: fixed;
   inset: 0;
@@ -390,7 +380,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
 }
 .drawerFooter{ display: flex; justify-content: flex-end; }
 
-/* Games */
 .grid{
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
