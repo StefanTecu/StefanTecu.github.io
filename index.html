@@ -4,9 +4,25 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tecu's Repo</title>
-  <link rel="icon" href="favicon.png" type="image/png" />
+
+  <!-- Performance -->
+  <link rel="preload" href="styles.css" as="style" />
   <link rel="stylesheet" href="styles.css" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="favicon.png" type="image/png" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Tecu's Repo" />
+  <meta property="og:description" content="Home hub for Tecu's music and game builds." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="favicon.png" />
+  <meta property="og:url" content="https://stefantecu.github.io/" />
+
+  <!-- Mobile UI color -->
+  <meta name="theme-color" content="#0b1020" />
 </head>
+
 <body>
   <header class="top">
     <div class="wrap">
@@ -25,13 +41,13 @@
       <h2>Home</h2>
 
       <div class="card subtle">
-        <p><b>Tf is ts?:</b> a repo for my uploads. But I'm as confused as you are.</p>
-        <p><b>Music:</b> songs I drop over time. Lots of unreleased projects.</p>
-        <p><b>Games:</b> my games. Football Betting Simulator to be exact.</p>
+        <p><b>Tf is ts?</b> I am as consused as you are.</p>
+        <p><b>Music:</b> songs I drop over time and unreleased projects.</p>
+        <p><b>Games:</b> my games (Football Betting Simulator in particular).</p>
       </div>
 
       <div class="hint">
-        Tip: go to Music or Games or whatever to see more content.
+        Tip: go to <code>Songs</code> or <code>Games</code> for more content.
       </div>
     </section>
   </main>
@@ -42,6 +58,6 @@
     </div>
   </footer>
 
-  <script src="app.js"></script>
+  <script src="app.js" defer></script>
 </body>
 </html>

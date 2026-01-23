@@ -18,49 +18,69 @@ const songs = [
   { file: "assets/songs/song10.mp3", name: "Universal Madness",  artist: "Tec-17",         stage: "Finished", version: "v1",   releaseDate: "TBD" },
 ];
 
-// -------------------- MUSIC PAGE ELEMENTS --------------------
+// -------------------- ELEMENTS (Music) --------------------
 const tbodyEl = document.getElementById("songTbody");
 const tableEl = document.getElementById("songTable");
+const tableWrapEl = document.getElementById("tableWrap");
 const audioEl = document.getElementById("audio");
 const nowPlayingEl = document.getElementById("nowPlaying");
 const playHintEl = document.getElementById("playHint");
 const playerBoxEl = document.getElementById("playerBox");
 const swipeHintEl = document.getElementById("swipeHint");
 
-// Top glide bar
-const tableWrapEl = document.getElementById("tableWrap");
+const searchEl = document.getElementById("songSearch");
+const shuffleEl = document.getElementById("shuffleToggle");
+const chipEls = document.querySelectorAll(".chip");
+
+const timeNowEl = document.getElementById("timeNow");
+const timeTotalEl = document.getElementById("timeTotal");
+
+// Glide bar
 const tableScrollerEl = document.getElementById("tableScroller");
 const tableScrollerInnerEl = document.getElementById("tableScrollerInner");
 
-// Sorting state (load from localStorage)
-let sortKey = localStorage.getItem("music_sortKey") || "name";
-let sortDir = localStorage.getItem("music_sortDir") || "asc"; // "asc" | "desc"
+// Drawer
+const drawerEl = document.getElementById("songDrawer");
+const drawerOverlayEl = document.getElementById("drawerOverlay");
+const drawerCloseBtn = document.getElementById("drawerCloseBtn");
+const drawerTitleEl = document.getElementById("drawerTitle");
+const drawerBodyEl = document.getElementById("drawerBody");
+const drawerPlayBtn = document.getElementById("drawerPlayBtn");
 
-// Playing state
-let currentFile = null; // string
+// -------------------- ELEMENTS (Games) --------------------
+const copyBtn = document.getElementById("copyDownloadBtn");
+const copyStatus = document.getElementById("copyStatus");
+
+// -------------------- State --------------------
+let sortKey = localStorage.getItem("music_sortKey") || "name";
+let sortDir = localStorage.getItem("music_sortDir") || "asc";
+
+let stageFilter = localStorage.getItem("music_stageFilter") || "All";
+let query = localStorage.getItem("music_query") || "";
+
+let shuffle = localStorage.getItem("music_shuffle") === "1";
+
+let currentFile = null;
 let isPlaying = false;
 
-// -------------------- HELPERS --------------------
-function normalizeStr(v) {
-  return String(v ?? "").trim().toLowerCase();
-}
+let selectedIndex = 0; // for keyboard navigation
 
-function dateValue(s) {
+// -------------------- Helpers --------------------
+function normalizeStr(v){ return String(v ?? "").trim().toLowerCase(); }
+
+function dateValue(s){
   const v = normalizeStr(s);
   if (!v || v === "tbd") return Number.POSITIVE_INFINITY;
-
   const parts = v.split(".");
   if (parts.length !== 3) return Number.POSITIVE_INFINITY;
-
   const dd = parseInt(parts[0], 10);
   const mm = parseInt(parts[1], 10);
   const yyyy = parseInt(parts[2], 10);
   if (!dd || !mm || !yyyy) return Number.POSITIVE_INFINITY;
-
   return new Date(yyyy, mm - 1, dd).getTime();
 }
 
-function compareSongs(a, b, key) {
+function compareSongs(a, b, key){
   if (key === "releaseDate") return dateValue(a.releaseDate) - dateValue(b.releaseDate);
 
   if (key === "version") {
@@ -73,13 +93,48 @@ function compareSongs(a, b, key) {
     return av.localeCompare(bv);
   }
 
-  const as = normalizeStr(a[key]);
-  const bs = normalizeStr(b[key]);
-  return as.localeCompare(bs);
+  return normalizeStr(a[key]).localeCompare(normalizeStr(b[key]));
 }
 
-function sortedSongs() {
-  const copy = [...songs];
+function persist(){
+  localStorage.setItem("music_sortKey", sortKey);
+  localStorage.setItem("music_sortDir", sortDir);
+  localStorage.setItem("music_stageFilter", stageFilter);
+  localStorage.setItem("music_query", query);
+  localStorage.setItem("music_shuffle", shuffle ? "1" : "0");
+}
+
+function isMobileWidth(){
+  return window.matchMedia && window.matchMedia("(max-width: 720px)").matches;
+}
+
+function haptic(ms){
+  if (navigator.vibrate) navigator.vibrate(ms);
+}
+
+function formatTime(sec){
+  if (!Number.isFinite(sec) || sec < 0) return "0:00";
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${m}:${String(s).padStart(2,"0")}`;
+}
+
+// -------------------- Filtering + sorting --------------------
+function filteredSongs(){
+  const q = normalizeStr(query);
+
+  return songs.filter((s) => {
+    const stageOk = stageFilter === "All" || s.stage === stageFilter;
+    if (!stageOk) return false;
+
+    if (!q) return true;
+    const blob = `${s.name} ${s.artist} ${s.stage} ${s.version} ${s.releaseDate}`.toLowerCase();
+    return blob.includes(q);
+  });
+}
+
+function sortedSongs(list){
+  const copy = [...list];
   copy.sort((a, b) => {
     const base = compareSongs(a, b, sortKey);
     return sortDir === "asc" ? base : -base;
@@ -87,61 +142,75 @@ function sortedSongs() {
   return copy;
 }
 
-function persistSort() {
-  localStorage.setItem("music_sortKey", sortKey);
-  localStorage.setItem("music_sortDir", sortDir);
+function displayedSongs(){
+  const list = sortedSongs(filteredSongs());
+
+  if (!shuffle) return list;
+
+  // Shuffle, but keep the current song at the top if it exists in the list
+  const copy = [...list];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+
+  if (currentFile) {
+    const idx = copy.findIndex(s => s.file === currentFile);
+    if (idx > 0) {
+      const [cur] = copy.splice(idx, 1);
+      copy.unshift(cur);
+    }
+  }
+
+  return copy;
 }
 
-function setSort(key) {
-  if (sortKey === key) sortDir = sortDir === "asc" ? "desc" : "asc";
-  else { sortKey = key; sortDir = "asc"; }
-
-  persistSort();
-  renderSongTable();
-  updateSortIcons();
-}
-
-function updateSortIcons() {
+// -------------------- Sort UI --------------------
+function updateSortIcons(){
   if (!tableEl) return;
   const ths = tableEl.querySelectorAll("th.sortable");
   ths.forEach((th) => {
     const icon = th.querySelector(".sortIcon");
     const key = th.getAttribute("data-key");
     if (!icon) return;
-
     if (key === sortKey) icon.textContent = sortDir === "asc" ? "▲" : "▼";
     else icon.textContent = "";
   });
 }
 
-function isMobileWidth() {
-  return window.matchMedia && window.matchMedia("(max-width: 720px)").matches;
+function setSort(key){
+  if (sortKey === key) sortDir = sortDir === "asc" ? "desc" : "asc";
+  else { sortKey = key; sortDir = "asc"; }
+  persist();
+  selectedIndex = 0;
+  renderSongTable();
+  updateSortIcons();
 }
 
-function scrollToPlayerIfMobile() {
-  if (!playerBoxEl) return;
-  if (!isMobileWidth()) return;
-  playerBoxEl.scrollIntoView({ behavior: "smooth", block: "end" });
-}
-
-// -------------------- PLAY / PAUSE TOGGLE --------------------
-async function playOrToggle(song) {
+// -------------------- Playback --------------------
+async function playSong(song){
   if (!audioEl || !nowPlayingEl) return;
 
   if (playHintEl) playHintEl.classList.add("hidden");
 
-  // If clicking the same currently playing song -> toggle pause/play
-  if (currentFile === song.file) {
+  const same = currentFile === song.file;
+
+  // Toggle if same
+  if (same) {
     if (!audioEl.paused) {
       audioEl.pause();
       isPlaying = false;
+      haptic(10);
       renderSongTable();
+      updateDrawerButton();
       return;
     } else {
       try {
         await audioEl.play();
         isPlaying = true;
+        haptic(10);
         renderSongTable();
+        updateDrawerButton();
         scrollToPlayerIfMobile();
         return;
       } catch {
@@ -164,35 +233,80 @@ async function playOrToggle(song) {
     await new Promise((r) => requestAnimationFrame(r));
     await audioEl.play();
     isPlaying = true;
+    haptic(12);
     renderSongTable();
+    updateDrawerButton();
     scrollToPlayerIfMobile();
   } catch {
     isPlaying = false;
     renderSongTable();
+    updateDrawerButton();
     if (playHintEl) playHintEl.classList.remove("hidden");
   }
 }
 
-// Keep UI accurate if user uses the audio controls
-if (audioEl) {
-  audioEl.addEventListener("play", () => { isPlaying = true; renderSongTable(); });
-  audioEl.addEventListener("pause", () => { isPlaying = false; renderSongTable(); });
-  audioEl.addEventListener("ended", () => { isPlaying = false; renderSongTable(); });
+function scrollToPlayerIfMobile(){
+  if (!playerBoxEl) return;
+  if (!isMobileWidth()) return;
+  playerBoxEl.scrollIntoView({ behavior: "smooth", block: "end" });
 }
 
-// -------------------- TABLE RENDER + PLAYING HIGHLIGHT --------------------
-function renderSongTable() {
+// Autoplay next
+function playNext(){
+  const list = displayedSongs();
+  if (!list.length) return;
+
+  const idx = currentFile ? list.findIndex(s => s.file === currentFile) : -1;
+  const next = idx >= 0 ? list[idx + 1] : list[0];
+  if (next) playSong(next);
+}
+
+// Keep UI accurate if user uses the audio controls
+if (audioEl) {
+  audioEl.addEventListener("play", () => { isPlaying = true; renderSongTable(); updateDrawerButton(); });
+  audioEl.addEventListener("pause", () => { isPlaying = false; renderSongTable(); updateDrawerButton(); });
+  audioEl.addEventListener("ended", () => { isPlaying = false; renderSongTable(); updateDrawerButton(); playNext(); });
+
+  audioEl.addEventListener("timeupdate", () => {
+    if (timeNowEl) timeNowEl.textContent = formatTime(audioEl.currentTime);
+  });
+  audioEl.addEventListener("loadedmetadata", () => {
+    if (timeTotalEl) timeTotalEl.textContent = formatTime(audioEl.duration);
+  });
+}
+
+// -------------------- Table render --------------------
+function renderSongTable(){
   if (!tbodyEl) return;
 
-  const list = sortedSongs();
+  const list = displayedSongs();
   tbodyEl.innerHTML = "";
 
-  list.forEach((song) => {
+  // clamp selection
+  if (selectedIndex < 0) selectedIndex = 0;
+  if (selectedIndex > list.length - 1) selectedIndex = Math.max(0, list.length - 1);
+
+  list.forEach((song, i) => {
     const tr = document.createElement("tr");
     tr.dataset.file = song.file;
 
+    const isCurrent = currentFile === song.file;
+    if (isCurrent) tr.classList.add("playing");
+    if (i === selectedIndex) tr.classList.add("selected");
+
     const tdName = document.createElement("td");
     tdName.textContent = song.name;
+    tdName.className = "clickableCell";
+    tdName.tabIndex = 0;
+    tdName.setAttribute("role", "button");
+    tdName.setAttribute("aria-label", `Open details for ${song.name}`);
+    tdName.addEventListener("click", () => openDrawer(song));
+    tdName.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openDrawer(song);
+      }
+    });
 
     const tdArtist = document.createElement("td");
     tdArtist.textContent = song.artist;
@@ -210,12 +324,9 @@ function renderSongTable() {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "playBtn";
-
-    const rowIsCurrent = currentFile === song.file;
-    if (rowIsCurrent) tr.classList.add("playing");
-    btn.textContent = rowIsCurrent && isPlaying ? "Pause" : "Play";
-
-    btn.addEventListener("click", () => playOrToggle(song));
+    btn.textContent = isCurrent && isPlaying ? "Pause" : "Play";
+    btn.setAttribute("aria-label", `${btn.textContent} ${song.name}`);
+    btn.addEventListener("click", () => playSong(song));
     tdPlay.appendChild(btn);
 
     tr.appendChild(tdName);
@@ -231,11 +342,11 @@ function renderSongTable() {
   syncScrollerSize();
 }
 
-// -------------------- TOP GLIDE BAR (SCROLL SYNC) --------------------
+// -------------------- Glide bar sync --------------------
 let syncingFromTop = false;
 let syncingFromTable = false;
 
-function syncScrollerSize() {
+function syncScrollerSize(){
   if (!tableEl || !tableWrapEl || !tableScrollerInnerEl || !tableScrollerEl) return;
 
   const tableWidth = tableEl.scrollWidth;
@@ -245,7 +356,7 @@ function syncScrollerSize() {
   tableScrollerEl.classList.toggle("hidden", !needs);
 }
 
-function hookScrollSync() {
+function hookScrollSync(){
   if (!tableWrapEl || !tableScrollerEl) return;
 
   tableScrollerEl.addEventListener("scroll", () => {
@@ -265,8 +376,8 @@ function hookScrollSync() {
   window.addEventListener("resize", syncScrollerSize);
 }
 
-// -------------------- SWIPE HINT (HIDE AFTER FIRST SCROLL) --------------------
-function initSwipeHint() {
+// Swipe hint hide after first scroll
+function initSwipeHint(){
   if (!swipeHintEl || !tableWrapEl) return;
 
   const hiddenAlready = localStorage.getItem("music_swipeHintHidden") === "1";
@@ -275,53 +386,205 @@ function initSwipeHint() {
     return;
   }
 
-  const hide = () => {
+  const hideOnce = () => {
     swipeHintEl.classList.add("hidden");
     localStorage.setItem("music_swipeHintHidden", "1");
     tableWrapEl.removeEventListener("scroll", hideOnce);
   };
 
-  const hideOnce = () => hide();
   tableWrapEl.addEventListener("scroll", hideOnce, { passive: true });
 }
 
-// -------------------- INIT (MUSIC PAGE) --------------------
+// -------------------- Controls: search + chips + shuffle --------------------
+function applyStageUI(){
+  chipEls.forEach((chip) => {
+    const st = chip.getAttribute("data-stage");
+    const active = st === stageFilter;
+    chip.classList.toggle("isActive", active);
+    chip.setAttribute("aria-pressed", active ? "true" : "false");
+  });
+}
+
+function initControls(){
+  if (searchEl) {
+    searchEl.value = query;
+    searchEl.addEventListener("input", () => {
+      query = searchEl.value;
+      persist();
+      selectedIndex = 0;
+      renderSongTable();
+    });
+  }
+
+  chipEls.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      stageFilter = chip.getAttribute("data-stage") || "All";
+      persist();
+      applyStageUI();
+      selectedIndex = 0;
+      renderSongTable();
+    });
+  });
+  applyStageUI();
+
+  if (shuffleEl) {
+    shuffleEl.checked = shuffle;
+    shuffleEl.addEventListener("change", () => {
+      shuffle = shuffleEl.checked;
+      persist();
+      selectedIndex = 0;
+      renderSongTable();
+    });
+  }
+}
+
+// -------------------- Keyboard shortcuts --------------------
+function initKeyboard(){
+  if (!tableWrapEl) return;
+
+  window.addEventListener("keydown", (e) => {
+    // / focuses search
+    if (e.key === "/" && searchEl) {
+      e.preventDefault();
+      searchEl.focus();
+      return;
+    }
+
+    // Avoid hijacking typing
+    const active = document.activeElement;
+    const typing = active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA");
+    if (typing) return;
+
+    if (!tbodyEl) return;
+
+    const list = displayedSongs();
+    if (!list.length) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      selectedIndex = Math.min(selectedIndex + 1, list.length - 1);
+      renderSongTable();
+      return;
+    }
+
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      selectedIndex = Math.max(selectedIndex - 1, 0);
+      renderSongTable();
+      return;
+    }
+
+    if (e.key === "Enter") {
+      e.preventDefault();
+      playSong(list[selectedIndex]);
+      return;
+    }
+
+    if (e.key === " ") {
+      e.preventDefault();
+      // space toggles play/pause of current, otherwise play selected
+      const cur = currentFile ? list.find(s => s.file === currentFile) : null;
+      if (cur) playSong(cur);
+      else playSong(list[selectedIndex]);
+    }
+  });
+}
+
+// -------------------- Drawer (song details) --------------------
+let drawerSong = null;
+
+function openDrawer(song){
+  drawerSong = song;
+  if (!drawerEl || !drawerOverlayEl) return;
+
+  drawerTitleEl.textContent = song.name;
+
+  drawerBodyEl.innerHTML = `
+    <p><b>Artist/s:</b> ${song.artist}</p>
+    <p><b>Stage:</b> ${song.stage}</p>
+    <p><b>Version:</b> ${song.version}</p>
+    <p><b>Release Date:</b> ${song.releaseDate}</p>
+    <p class="muted tiny">Future: lyrics, notes, cover art.</p>
+  `;
+
+  updateDrawerButton();
+
+  drawerEl.classList.remove("hidden");
+  drawerOverlayEl.classList.remove("hidden");
+  drawerEl.setAttribute("aria-hidden", "false");
+  drawerOverlayEl.setAttribute("aria-hidden", "false");
+}
+
+function closeDrawer(){
+  if (!drawerEl || !drawerOverlayEl) return;
+  drawerEl.classList.add("hidden");
+  drawerOverlayEl.classList.add("hidden");
+  drawerEl.setAttribute("aria-hidden", "true");
+  drawerOverlayEl.setAttribute("aria-hidden", "true");
+}
+
+function updateDrawerButton(){
+  if (!drawerPlayBtn) return;
+  if (!drawerSong) { drawerPlayBtn.textContent = "Play"; return; }
+  const isCur = currentFile === drawerSong.file;
+  drawerPlayBtn.textContent = isCur && isPlaying ? "Pause" : "Play";
+}
+
+function initDrawer(){
+  if (drawerCloseBtn) drawerCloseBtn.addEventListener("click", closeDrawer);
+  if (drawerOverlayEl) drawerOverlayEl.addEventListener("click", closeDrawer);
+
+  if (drawerPlayBtn) {
+    drawerPlayBtn.addEventListener("click", () => {
+      if (drawerSong) playSong(drawerSong);
+    });
+  }
+
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeDrawer();
+  });
+}
+
+// -------------------- Init (music page) --------------------
 if (tableEl) {
-  const sortableHeaders = tableEl.querySelectorAll("th.sortable");
-  sortableHeaders.forEach((th) => {
+  const headers = tableEl.querySelectorAll("th.sortable");
+  headers.forEach((th) => {
     th.addEventListener("click", () => {
       const key = th.getAttribute("data-key");
-      if (key) setSort(key);
+      if (!key) return;
+      setSort(key);
     });
   });
 
-  renderSongTable();
   updateSortIcons();
-  hookScrollSync();
+  initControls();
   initSwipeHint();
+  hookScrollSync();
+  initKeyboard();
+  initDrawer();
+
+  renderSongTable();
 }
 
-// -------------------- GAMES PAGE: COPY DOWNLOAD LINK BUTTON --------------------
-(function initCopyDownload() {
-  const btn = document.getElementById("copyDownloadBtn");
-  const status = document.getElementById("copyStatus");
-  if (!btn) return;
+// -------------------- Games: Copy download link --------------------
+(function initCopyDownload(){
+  if (!copyBtn) return;
+  const url = copyBtn.getAttribute("data-copy") || "";
 
-  const url = btn.getAttribute("data-copy") || "";
-  const showStatus = (text) => {
-    if (!status) return;
-    status.textContent = text;
-    status.classList.remove("hidden");
-    setTimeout(() => status.classList.add("hidden"), 1400);
+  const show = (txt) => {
+    if (!copyStatus) return;
+    copyStatus.textContent = txt;
+    copyStatus.classList.remove("hidden");
+    setTimeout(() => copyStatus.classList.add("hidden"), 1400);
   };
 
-  btn.addEventListener("click", async () => {
+  copyBtn.addEventListener("click", async () => {
     try {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(url);
-        showStatus("Copied!");
+        show("Copied!");
+        haptic(10);
       } else {
-        // Fallback
         window.prompt("Copy this link:", url);
       }
     } catch {
@@ -330,12 +593,9 @@ if (tableEl) {
   });
 })();
 
-// -------------------- GAMES PAGE (how-to-run toggle) --------------------
+// -------------------- Games: How-to-run toggle --------------------
 const howBtn = document.getElementById("howToRunBtn");
 const howBox = document.getElementById("howToRun");
-
 if (howBtn && howBox) {
-  howBtn.addEventListener("click", () => {
-    howBox.classList.toggle("hidden");
-  });
+  howBtn.addEventListener("click", () => howBox.classList.toggle("hidden"));
 }

@@ -4,9 +4,21 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tecu's Repo • Games</title>
-  <link rel="icon" href="favicon.png" type="image/png" />
+
+  <!-- Performance -->
+  <link rel="preload" href="styles.css" as="style" />
   <link rel="stylesheet" href="styles.css" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="favicon.png" type="image/png" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Tecu's Repo • Games" />
+  <meta property="og:description" content="Desktop builds, download links, version history, and checksums." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="favicon.png" />
 </head>
+
 <body>
   <header class="top">
     <div class="wrap">
@@ -33,12 +45,16 @@
 
       <div class="grid">
         <article class="game card subtle">
-          <h3>Football Betting Career (Requires JavaFX)</h3>
+          <div class="gameTop">
+            <h3>Football Betting Career (Requires JavaFX)</h3>
+            <span class="badge badgeStrong">Latest</span>
+          </div>
+
           <p class="muted">Desktop build. Download and run .bat locally.</p>
 
           <div class="actions">
-            <a class="pill" id="downloadBtn" href="downloads/Football%20Betting%20Career%20v0.6.rar" download>Download</a>
-            <button class="pill ghost" id="howToRunBtn" type="button">How to run</button>
+            <a class="pill" id="downloadBtn" href="downloads/Football%20Betting%20Career%20v0.6.rar" download aria-label="Download Football Betting Career v0.6">Download</a>
+            <button class="pill ghost" id="howToRunBtn" type="button" aria-label="How to run">How to run</button>
           </div>
 
           <p class="muted" style="margin-top:10px;">
@@ -49,11 +65,48 @@
           </p>
 
           <div class="actions" style="margin-top:10px;">
-            <button class="pill ghost copyBtn" id="copyDownloadBtn" type="button" data-copy="https://stefantecu.github.io/downloads/Football%20Betting%20Career%20v0.6.rar">
+            <button class="pill ghost copyBtn" id="copyDownloadBtn" type="button" data-copy="https://stefantecu.github.io/downloads/Football%20Betting%20Career%20v0.6.rar" aria-label="Copy download link">
               📋 Copy download link
             </button>
             <span class="muted tiny hidden" id="copyStatus">Copied!</span>
           </div>
+
+          <div class="checksumBox">
+            <div class="muted tiny">SHA-256</div>
+            <code class="hash" id="sha256Latest">PUT_SHA256_HERE_FOR_v0.6</code>
+            <div class="muted tiny">Replace this text with the real hash when you compute it.</div>
+          </div>
+
+          <details class="versions" open>
+            <summary class="versionsSummary">Version history</summary>
+
+            <div class="versionItem">
+              <div class="versionRow">
+                <span class="badge badgeStrong">v0.6</span>
+                <span class="muted tiny">RAR</span>
+              </div>
+              <div class="muted tiny">
+                Link: <a class="link" href="downloads/Football%20Betting%20Career%20v0.6.rar" download>downloads/Football Betting Career v0.6.rar</a>
+              </div>
+              <div class="muted tiny">SHA-256: <code class="hash">PUT_SHA256_HERE_FOR_v0.6</code></div>
+            </div>
+
+            <div class="versionItem">
+              <div class="versionRow">
+                <span class="badge">v0.5</span>
+                <span class="muted tiny">TBD</span>
+              </div>
+              <div class="muted tiny">Add older files here when you upload them.</div>
+            </div>
+
+            <div class="versionItem">
+              <div class="versionRow">
+                <span class="badge">v0.4</span>
+                <span class="muted tiny">TBD</span>
+              </div>
+              <div class="muted tiny">Add older files here when you upload them.</div>
+            </div>
+          </details>
         </article>
       </div>
 
@@ -74,6 +127,6 @@
     </div>
   </footer>
 
-  <script src="app.js"></script>
+  <script src="app.js" defer></script>
 </body>
 </html>
