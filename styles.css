@@ -1,68 +1,210 @@
-/* Reset-ish */
+/* =========================
+   Base / Reset
+========================= */
+:root{
+  --bg: #0b0c10;
+  --panel: #12141b;
+  --panel-2: #0f1117;
+  --text: #e8eaf0;
+  --muted: rgba(232,234,240,.7);
+  --border: rgba(232,234,240,.12);
+  --btn: rgba(232,234,240,.08);
+  --btn-hover: rgba(232,234,240,.14);
+  --btn-primary: rgba(232,234,240,.18);
+  --radius: 16px;
+}
+
+* { box-sizing: border-box; }
+
 html, body {
   margin: 0;
   padding: 0;
   min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  -webkit-text-size-adjust: 100%;
 }
 
-/* The most important fix:
-   Use min-height: 100vh, not height: 100vh.
-   And use flex column so footer can sit at the bottom of the document flow. */
-.page {
+/* =========================
+   Layout: True scroll-bottom footer
+========================= */
+.page{
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-/* Optional styling */
-.header {
-  padding: 16px 20px;
-  border-bottom: 1px solid rgba(0,0,0,0.1);
+/* Header */
+.header{
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
 }
 
-.content {
-  padding: 20px;
-}
-
-/* Demo filler to create scroll.
-   Remove this in your real project. */
-.filler {
-  height: 1400px;
-}
-
-/* THE KEY LINE:
-   This pushes Now Playing to the end of the page when content is short,
-   but when content is long it naturally sits at the bottom of the scroll. */
-.now-playing {
-  margin-top: auto;
-  padding: 14px 20px;
-  border-top: 1px solid rgba(0,0,0,0.1);
+.header-inner{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 14px 16px;
   display: flex;
   align-items: center;
+  gap: 12px;
   justify-content: space-between;
-  gap: 16px;
 }
 
-.np-title {
-  font-size: 12px;
-  opacity: 0.7;
+.brand{
+  font-size: 18px;
+  margin: 0;
+  letter-spacing: .2px;
 }
 
-.np-track {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.np-right {
+.nav{
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
-.np-btn {
+.nav-link{
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
   padding: 8px 10px;
-  border: 1px solid rgba(0,0,0,0.2);
-  background: transparent;
-  border-radius: 10px;
+  border-radius: 12px;
+}
+.nav-link:active,
+.nav-link:hover{
+  background: var(--btn);
+  color: var(--text);
+}
+
+/* Main content */
+.content{
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.card{
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+
+.card h2{
+  margin: 0 0 8px 0;
+  font-size: 16px;
+}
+.card p{
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.4;
+  font-size: 14px;
+}
+
+/* =========================
+   Now Playing at TRUE page bottom
+   (normal flow + last element)
+========================= */
+.now-playing{
+  margin-top: auto; /* <- pushes to bottom when page is short */
+  width: 100%;
+  border-top: 1px solid var(--border);
+  background: var(--panel-2);
+
+  /* Safe areas for Android/iOS notches */
+  padding:
+    12px
+    max(14px, env(safe-area-inset-right))
+    max(12px, env(safe-area-inset-bottom))
+    max(14px, env(safe-area-inset-left));
+}
+
+.now-playing{
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.np-left{
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.np-label{
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.np-track{
+  font-size: 14px;
+  font-weight: 650;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Controls */
+.np-right{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.np-btn{
+  height: 40px;
+  min-width: 40px;
+  padding: 0 12px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--btn);
+  color: var(--text);
+  font-size: 16px;
   cursor: pointer;
+  touch-action: manipulation;
+}
+
+.np-btn:active{ transform: scale(0.98); }
+.np-btn:hover{ background: var(--btn-hover); }
+
+.np-btn-primary{
+  background: var(--btn-primary);
+}
+
+/* =========================
+   Mobile fixes
+========================= */
+@media (max-width: 600px){
+  .header-inner{
+    padding: 12px 12px;
+  }
+
+  .content{
+    padding: 12px;
+  }
+
+  .now-playing{
+    /* Stack nicely on small screens */
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .np-right{
+    justify-content: space-between;
+  }
+
+  .np-btn{
+    flex: 1;
+    min-width: 0;
+  }
 }
