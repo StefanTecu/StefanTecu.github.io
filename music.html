@@ -83,28 +83,33 @@
           <tbody id="songTbody"></tbody>
         </table>
       </div>
-
-      <!-- Player -->
-      <div class="player card subtle playerSticky" id="playerBox">
-        <div class="playerTop">
-          <div class="player-meta">
-            <div class="label">Now playing</div>
-            <div id="nowPlaying" class="now">Nothing yet</div>
-          </div>
-          <div class="timeBox" aria-label="Time">
-            <span id="timeNow">0:00</span>
-            <span class="muted">/</span>
-            <span id="timeTotal">0:00</span>
-          </div>
-        </div>
-
-        <audio id="audio" controls preload="metadata" playsinline></audio>
-        <div id="playHint" class="muted tiny hidden">
-          If your phone blocks playback, tap the play button on the audio bar once.
-        </div>
-      </div>
     </section>
   </main>
+
+  <!-- ✅ STICKY NOW PLAYING (SOLID) -->
+  <div class="nowPlayingBar" id="playerBox">
+    <div class="wrap nowPlayingInner">
+      <div class="npLeft">
+        <div class="npLabel">Now playing:</div>
+        <div id="nowPlaying" class="npText">Nothing yet</div>
+      </div>
+
+      <div class="npRight">
+        <div class="timeBox" aria-label="Time">
+          <span id="timeNow">0:00</span>
+          <span class="muted">/</span>
+          <span id="timeTotal">0:00</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <audio id="audio" controls preload="metadata" playsinline></audio>
+      <div id="playHint" class="muted tiny hidden">
+        If your phone blocks playback, tap the play button on the audio bar once.
+      </div>
+    </div>
+  </div>
 
   <!-- Details drawer -->
   <div class="drawerOverlay hidden" id="drawerOverlay" aria-hidden="true"></div>
@@ -121,7 +126,7 @@
     <div class="drawerBody" id="drawerBody"></div>
 
     <div class="drawerFooter">
-      <button class="pill" id="drawerPlayBtn" type="button" aria-label="Play or pause from details">Play</button>
+      <button class="playBtn" id="drawerPlayBtn" type="button" aria-label="Play or pause from details">Play</button>
     </div>
   </aside>
 
