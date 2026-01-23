@@ -4,18 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tecu's Repo • Music</title>
-
-  <link rel="preload" href="styles.css" as="style" />
-  <link rel="stylesheet" href="styles.css" />
-
   <link rel="icon" href="favicon.png" type="image/png" />
-
-  <meta property="og:title" content="Tecu's Repo • Music" />
-  <meta property="og:description" content="Songs catalog with play controls, sorting, filters, and metadata." />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="favicon.png" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
   <header class="top">
     <div class="wrap">
@@ -36,94 +27,58 @@
         <a class="link" href="index.html">← Home</a>
       </div>
 
-      <p class="muted">Click a header to sort.</p>
+      <p class="muted">
+        Click a header to sort.
+      </p>
 
-      <div class="musicControls" role="region" aria-label="Music controls">
-        <label class="searchBox" aria-label="Search songs">
-          <span class="muted tiny">Search</span>
-          <input id="songSearch" type="search" placeholder="Name / Artist / Stage" autocomplete="off" />
-        </label>
-
-        <div class="chipRow" aria-label="Stage filters">
-          <button type="button" class="chip isActive" data-stage="All" aria-pressed="true">All</button>
-          <button type="button" class="chip" data-stage="Demo" aria-pressed="false">Demo</button>
-          <button type="button" class="chip" data-stage="Released" aria-pressed="false">Released</button>
-          <button type="button" class="chip" data-stage="Finished" aria-pressed="false">Finished</button>
-        </div>
-
-        <label class="toggle" aria-label="Shuffle toggle">
-          <input id="shuffleToggle" type="checkbox" />
-          <span>Shuffle</span>
-        </label>
-      </div>
-
-      <p class="muted tiny swipeHint" id="swipeHint">Swipe left/right to see all columns</p>
-
+      <!-- Top glide bar (helps horizontal scrolling on Android) -->
       <div class="tableScroller" id="tableScroller" aria-hidden="true">
         <div class="tableScrollerInner" id="tableScrollerInner"></div>
       </div>
 
-      <div class="tableWrap" id="tableWrap" tabindex="0" aria-label="Songs table container">
+      <div class="tableWrap" id="tableWrap">
         <table class="songTable" id="songTable" aria-label="Songs">
           <thead>
             <tr>
-              <th class="sortable" data-key="name" scope="col">Name <span class="sortIcon" aria-hidden="true"></span></th>
-              <th class="sortable" data-key="artist" scope="col">Artist/s <span class="sortIcon" aria-hidden="true"></span></th>
-              <th class="sortable" data-key="stage" scope="col">Stage <span class="sortIcon" aria-hidden="true"></span></th>
-              <th class="sortable" data-key="version" scope="col">Version <span class="sortIcon" aria-hidden="true"></span></th>
-              <th class="sortable" data-key="releaseDate" scope="col">Release Date <span class="sortIcon" aria-hidden="true"></span></th>
+              <th class="sortable" data-key="name" scope="col">
+                Name <span class="sortIcon" aria-hidden="true"></span>
+              </th>
+              <th class="sortable" data-key="artist" scope="col">
+                Artist/s <span class="sortIcon" aria-hidden="true"></span>
+              </th>
+              <th class="sortable" data-key="stage" scope="col">
+                Stage <span class="sortIcon" aria-hidden="true"></span>
+              </th>
+              <th class="sortable" data-key="version" scope="col">
+                Version <span class="sortIcon" aria-hidden="true"></span>
+              </th>
+              <th class="sortable" data-key="releaseDate" scope="col">
+                Release Date <span class="sortIcon" aria-hidden="true"></span>
+              </th>
               <th scope="col">Play</th>
             </tr>
           </thead>
-          <tbody id="songTbody"></tbody>
+
+          <tbody id="songTbody">
+            <!-- rendered by app.js -->
+          </tbody>
         </table>
+      </div>
+
+      <!-- ✅ Reverted: player lives here (NOT sticky) -->
+      <div class="player card subtle">
+        <div class="player-meta">
+          <div class="label">Now playing</div>
+          <div id="nowPlaying" class="now">Nothing yet</div>
+        </div>
+
+        <audio id="audio" controls preload="none" playsinline></audio>
+        <div id="playHint" class="muted tiny hidden">
+          If your phone blocks playback, tap the play button on the audio bar once.
+        </div>
       </div>
     </section>
   </main>
-
-  <!-- ✅ ONLY PLAYER (fixed bottom) -->
-  <div class="nowPlayingBar" id="playerBox">
-    <div class="wrap nowPlayingInner">
-      <div class="npLeft">
-        <div class="npLabel">Now playing:</div>
-        <div id="nowPlaying" class="npText">Nothing yet</div>
-      </div>
-
-      <div class="npRight">
-        <div class="timeBox" aria-label="Time">
-          <span id="timeNow">0:00</span>
-          <span class="muted">/</span>
-          <span id="timeTotal">0:00</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="wrap">
-      <audio id="audio" controls preload="metadata" playsinline></audio>
-      <div id="playHint" class="muted tiny hidden">
-        If your phone blocks playback, tap the play button on the audio bar once.
-      </div>
-    </div>
-  </div>
-
-  <!-- Drawer -->
-  <div class="drawerOverlay hidden" id="drawerOverlay" aria-hidden="true"></div>
-
-  <aside class="drawer hidden" id="songDrawer" aria-label="Song details" aria-hidden="true">
-    <div class="drawerHeader">
-      <div>
-        <div class="muted tiny">Song</div>
-        <div class="drawerTitle" id="drawerTitle">-</div>
-      </div>
-      <button class="pill ghost" id="drawerCloseBtn" type="button" aria-label="Close details">Close</button>
-    </div>
-
-    <div class="drawerBody" id="drawerBody"></div>
-
-    <div class="drawerFooter">
-      <button class="playBtn" id="drawerPlayBtn" type="button" aria-label="Play or pause from details">Play</button>
-    </div>
-  </aside>
 
   <footer class="footer">
     <div class="wrap">
@@ -131,6 +86,6 @@
     </div>
   </footer>
 
-  <script src="app.js" defer></script>
+  <script src="app.js"></script>
 </body>
 </html>
