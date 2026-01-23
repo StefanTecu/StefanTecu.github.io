@@ -440,13 +440,13 @@ code{
   .pill{ padding: 10px 12px; }
   .card{ padding: 16px; }
 }
-/* ✅ Sticky Now Playing bar (solid, non-transparent) */
+/* ✅ Force bottom-fixed Now Playing bar */
 .nowPlayingBar{
-  position: fixed;
+  position: fixed !important;
   left: 0;
   right: 0;
-  bottom: 0;
-  z-index: 10;
+  bottom: 0 !important;
+  z-index: 1000;
 
   background: #0b1020; /* solid */
   border-top: 1px solid rgba(255,255,255,.12);
@@ -462,8 +462,30 @@ code{
   margin-bottom: 8px;
 }
 
-.npLeft{
-  min-width: 0;
+.npLeft{ min-width: 0; }
+
+.npLabel{
+  font-size: 12px;
+  color: rgba(255,255,255,.75);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.npText{
+  font-size: 14px;
+  font-weight: 650;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.nowPlayingBar audio{ width: 100%; }
+
+/* ✅ Make room so the table/footer aren't hidden behind the fixed bar */
+body{
+  padding-bottom: 160px;
+}
 }
 
 .npLabel{
