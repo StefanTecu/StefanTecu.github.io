@@ -2,50 +2,50 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Player Page</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
 
   <body>
-    <!-- IMPORTANT:
-         The page wrapper must NOT be height: 100vh.
-         It must be min-height: 100vh and allowed to grow. -->
     <div class="page">
       <header class="header">
-        <h1>My Website</h1>
+        <div class="header-inner">
+          <h1 class="brand">My Website</h1>
+          <nav class="nav">
+            <a href="#" class="nav-link">Home</a>
+            <a href="#" class="nav-link">Library</a>
+            <a href="#" class="nav-link">About</a>
+          </nav>
+        </div>
       </header>
 
-      <main class="content">
-        <!-- Your page content goes here. -->
-        <section class="section">
+      <main class="content" id="content">
+        <!-- Your real content goes here -->
+        <section class="card">
           <h2>Content</h2>
-          <p>Scroll down to reach the true bottom of the page.</p>
+          <p>Scroll down. “Now Playing” will be at the true bottom (end of scroll).</p>
         </section>
 
-        <!-- Example filler so you can see scroll behavior -->
-        <section class="section">
-          <h2>More stuff</h2>
+        <section class="card">
+          <h2>More content</h2>
           <p>
-            Add your real content here. This area grows and creates the scroll.
+            Add your real page sections here. Remove the old “filler” block entirely.
           </p>
-          <div class="filler"></div>
         </section>
       </main>
 
-      <!-- This is the KEY:
-           "Now Playing" is LAST in DOM and stays in normal flow,
-           so it lands at the scroll limit. -->
-      <footer class="now-playing" id="now-playing">
+      <!-- Must be last in DOM -->
+      <footer class="now-playing" id="now-playing" aria-label="Now playing">
         <div class="np-left">
-          <div class="np-title">Now playing</div>
+          <div class="np-label">Now playing</div>
           <div class="np-track" id="np-track">Nothing playing</div>
         </div>
 
-        <div class="np-right">
-          <button class="np-btn" id="btn-prev" type="button">Prev</button>
-          <button class="np-btn" id="btn-play" type="button">Play</button>
-          <button class="np-btn" id="btn-next" type="button">Next</button>
+        <div class="np-right" aria-label="Playback controls">
+          <button class="np-btn" id="btn-prev" type="button">⏮</button>
+          <button class="np-btn np-btn-primary" id="btn-play" type="button">▶</button>
+          <button class="np-btn" id="btn-next" type="button">⏭</button>
         </div>
       </footer>
     </div>
