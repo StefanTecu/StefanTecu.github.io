@@ -5,14 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tecu's Repo • Music</title>
 
-  <!-- Performance -->
   <link rel="preload" href="styles.css" as="style" />
   <link rel="stylesheet" href="styles.css" />
 
-  <!-- Favicon -->
   <link rel="icon" href="favicon.png" type="image/png" />
 
-  <!-- Open Graph -->
   <meta property="og:title" content="Tecu's Repo • Music" />
   <meta property="og:description" content="Songs catalog with play controls, sorting, filters, and metadata." />
   <meta property="og:type" content="website" />
@@ -41,7 +38,6 @@
 
       <p class="muted">Click a header to sort.</p>
 
-      <!-- Controls -->
       <div class="musicControls" role="region" aria-label="Music controls">
         <label class="searchBox" aria-label="Search songs">
           <span class="muted tiny">Search</span>
@@ -63,7 +59,6 @@
 
       <p class="muted tiny swipeHint" id="swipeHint">Swipe left/right to see all columns</p>
 
-      <!-- Top glide bar -->
       <div class="tableScroller" id="tableScroller" aria-hidden="true">
         <div class="tableScrollerInner" id="tableScrollerInner"></div>
       </div>
@@ -86,7 +81,7 @@
     </section>
   </main>
 
-  <!-- ✅ STICKY NOW PLAYING (SOLID) -->
+  <!-- ✅ ONLY PLAYER (fixed bottom) -->
   <div class="nowPlayingBar" id="playerBox">
     <div class="wrap nowPlayingInner">
       <div class="npLeft">
@@ -111,7 +106,7 @@
     </div>
   </div>
 
-  <!-- Details drawer -->
+  <!-- Drawer -->
   <div class="drawerOverlay hidden" id="drawerOverlay" aria-hidden="true"></div>
 
   <aside class="drawer hidden" id="songDrawer" aria-label="Song details" aria-hidden="true">
