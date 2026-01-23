@@ -144,10 +144,8 @@ function sortedSongs(list){
 
 function displayedSongs(){
   const list = sortedSongs(filteredSongs());
-
   if (!shuffle) return list;
 
-  // Shuffle, but keep the current song at the top if it exists in the list
   const copy = [...list];
   for (let i = copy.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -263,9 +261,22 @@ function playNext(){
 
 // Keep UI accurate if user uses the audio controls
 if (audioEl) {
-  audioEl.addEventListener("play", () => { isPlaying = true; renderSongTable(); updateDrawerButton(); });
-  audioEl.addEventListener("pause", () => { isPlaying = false; renderSongTable(); updateDrawerButton(); });
-  audioEl.addEventListener("ended", () => { isPlaying = false; renderSongTable(); updateDrawerButton(); playNext(); });
+  audioEl.addEventListener("play", () => {
+    isPlaying = true;
+    renderSongTable();
+    updateDrawerButton();
+  });
+  audioEl.addEventListener("pause", () => {
+    isPlaying = false;
+    renderSongTable();
+    updateDrawerButton();
+  });
+  audioEl.addEventListener("ended", () => {
+    isPlaying = false;
+    renderSongTable();
+    updateDrawerButton();
+    playNext();
+  });
 
   audioEl.addEventListener("timeupdate", () => {
     if (timeNowEl) timeNowEl.textContent = formatTime(audioEl.currentTime);
@@ -282,9 +293,21 @@ function renderSongTable(){
   const list = displayedSongs();
   tbodyEl.innerHTML = "";
 
-  // clamp selection
   if (selectedIndex < 0) selectedIndex = 0;
   if (selectedIndex > list.length - 1) selectedIndex = Math.max(0, list.length - 1);
+
+  // Empty state (no results)
+  if (!list.length) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 6;
+    td.className = "muted";
+    td.textContent = "No results.";
+    tr.appendChild(td);
+    tbodyEl.appendChild(tr);
+    syncScrollerSize();
+    return;
+  }
 
   list.forEach((song, i) => {
     const tr = document.createElement("tr");
@@ -296,7 +319,6 @@ function renderSongTable(){
 
     const tdName = document.createElement("td");
     tdName.textContent = song.name;
-    tdName.className = "clickableCell";
     tdName.tabIndex = 0;
     tdName.setAttribute("role", "button");
     tdName.setAttribute("aria-label", `Open details for ${song.name}`);
@@ -324,7 +346,10 @@ function renderSongTable(){
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "playBtn";
+
     btn.textContent = isCurrent && isPlaying ? "Pause" : "Play";
+    btn.classList.toggle("pause", isCurrent && isPlaying);
+
     btn.setAttribute("aria-label", `${btn.textContent} ${song.name}`);
     btn.addEventListener("click", () => playSong(song));
     tdPlay.appendChild(btn);
@@ -440,22 +465,16 @@ function initControls(){
 
 // -------------------- Keyboard shortcuts --------------------
 function initKeyboard(){
-  if (!tableWrapEl) return;
-
   window.addEventListener("keydown", (e) => {
-    // / focuses search
     if (e.key === "/" && searchEl) {
       e.preventDefault();
       searchEl.focus();
       return;
     }
 
-    // Avoid hijacking typing
     const active = document.activeElement;
     const typing = active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA");
     if (typing) return;
-
-    if (!tbodyEl) return;
 
     const list = displayedSongs();
     if (!list.length) return;
@@ -482,7 +501,6 @@ function initKeyboard(){
 
     if (e.key === " ") {
       e.preventDefault();
-      // space toggles play/pause of current, otherwise play selected
       const cur = currentFile ? list.find(s => s.file === currentFile) : null;
       if (cur) playSong(cur);
       else playSong(list[selectedIndex]);
@@ -525,9 +543,15 @@ function closeDrawer(){
 
 function updateDrawerButton(){
   if (!drawerPlayBtn) return;
-  if (!drawerSong) { drawerPlayBtn.textContent = "Play"; return; }
-  const isCur = currentFile === drawerSong.file;
-  drawerPlayBtn.textContent = isCur && isPlaying ? "Pause" : "Play";
+  if (!drawerSong){
+    drawerPlayBtn.textContent = "Play";
+    drawerPlayBtn.classList.remove("pause");
+    return;
+  }
+
+  const active = currentFile === drawerSong.file && isPlaying;
+  drawerPlayBtn.textContent = active ? "Pause" : "Play";
+  drawerPlayBtn.classList.toggle("pause", active);
 }
 
 function initDrawer(){
