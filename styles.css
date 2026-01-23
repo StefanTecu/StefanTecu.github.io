@@ -440,3 +440,53 @@ code{
   .pill{ padding: 10px 12px; }
   .card{ padding: 16px; }
 }
+/* ✅ Sticky Now Playing bar (solid, non-transparent) */
+.nowPlayingBar{
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+
+  background: #0b1020; /* solid */
+  border-top: 1px solid rgba(255,255,255,.12);
+  box-shadow: 0 -12px 35px rgba(0,0,0,.45);
+  padding: 12px 0 14px;
+}
+
+.nowPlayingInner{
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.npLeft{
+  min-width: 0;
+}
+
+.npLabel{
+  font-size: 12px;
+  color: rgba(255,255,255,.75);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.npText{
+  font-size: 14px;
+  font-weight: 650;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.nowPlayingBar audio{
+  width: 100%;
+}
+
+/* make room so content doesn't hide behind the fixed bar */
+body{
+  padding-bottom: 140px;
+}
