@@ -127,18 +127,21 @@ function renderSongTable(){
   sortedSongs().forEach(song => {
     const tr = document.createElement("tr");
 
-    ["name","artist","stage","version","releaseDate"].forEach(k => {
-      const td = document.createElement("td");
-      td.textContent = song[k];
-      tr.appendChild(td);
-    });
+    // Play button FIRST
+const tdPlay = document.createElement("td");
+const btn = document.createElement("button");
+const playing = currentSong && currentSong.file === song.file && !audioEl.paused;
+btn.textContent = playing ? "Pause" : "Play";
+btn.addEventListener("click", () => playSong(song));
+tdPlay.appendChild(btn);
+tr.appendChild(tdPlay);
 
-    const tdPlay = document.createElement("td");
-    const btn = document.createElement("button");
-    const playing = currentSong && currentSong.file === song.file && !audioEl.paused;
-    btn.textContent = playing ? "Pause" : "Play";
-    btn.addEventListener("click", () => playSong(song));
-    tdPlay.appendChild(btn);
+// Then song data
+["name","artist","stage","version","releaseDate"].forEach(k => {
+  const td = document.createElement("td");
+  td.textContent = song[k];
+  tr.appendChild(td);
+});
 
     tr.appendChild(tdPlay);
     tbodyEl.appendChild(tr);

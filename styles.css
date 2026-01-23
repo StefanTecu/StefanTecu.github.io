@@ -152,6 +152,11 @@ h3{ margin: 0 0 10px; font-size: 18px; }
 }
 .songTable tbody tr:hover{ background: rgba(255,255,255,.03); }
 .songTable tbody tr:last-child td{ border-bottom: none; }
+.songTable td:first-child,
+.songTable th:first-child{
+  width: 80px;
+  text-align: center;
+}
 
 .sortable{ cursor: pointer; user-select: none; }
 .sortable:hover{ background: rgba(255,255,255,.08); }
