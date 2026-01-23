@@ -42,146 +42,426 @@
         <!-- APP 1 -->
         <article class="card subtle">
           <div class="gameTop">
-            <h3>App 1: Example App Name</h3>
+            <h3>Empty Recycle Bin</h3>
             <span class="badge badgeStrong">Latest</span>
           </div>
 
-          <p class="muted">Example description. Replace this with what the app does.</p>
+          <p class="muted">.</p>
 
           <div class="actions">
-            <a class="pill" href="downloads/App%201.rar" download>Download</a>
+            <a class="pill" href="downloads/app1.bat" download>Download</a>
           </div>
-
-          <p class="muted" style="margin-top:10px;">
-            Or click this link mor manual download:<br>
-            <a class="link" href="https://stefantecu.github.io/downloads/App%201.rar" target="_blank" rel="noopener noreferrer">
-              https://stefantecu.github.io/downloads/App%201.rar
-            </a>
-          </p>
-
           <details class="codeBox">
             <summary class="codeSummary">View code</summary>
-            <pre class="codePre"><code>// Paste your full code here for App 1.
-// You can paste any language: Java, C#, Python, HTML, etc.
-// Tip: keep it exactly as your source file(s).
-//
-// Example:
-public class Main {
-  public static void main(String[] args) {
-    System.out.println("Hello from App 1");
-  }
-}
-</code></pre>
+            <pre class="codePre"><code>
+
+@echo off
+powershell -NoProfile -Command "Clear-RecycleBin -Force"
+echo Recycle Bin emptied.
+pause
+
+
+	</code></pre>
           </details>
         </article>
 
         <!-- APP 2 -->
         <article class="card subtle">
           <div class="gameTop">
-            <h3>App 2: Example App Name</h3>
+            <h3>App 2: Tecu's Toolbox</h3>
             <span class="badge">Build</span>
           </div>
 
-          <p class="muted">Example description. Replace this with what the app does.</p>
+          <p class="muted">A toolbox I created for viewing PC Specs, Showing all Wi-Fi passwords you ever connected to, restore last Chrome tabs or clean caches.</p>
 
           <div class="actions">
             <a class="pill" href="downloads/App%202.rar" download>Download</a>
           </div>
 
-          <p class="muted" style="margin-top:10px;">
-            Or click this link mor manual download:<br>
-            <a class="link" href="https://stefantecu.github.io/downloads/App%202.rar" target="_blank" rel="noopener noreferrer">
-              https://stefantecu.github.io/downloads/App%202.rar
-            </a>
-          </p>
-
           <details class="codeBox">
             <summary class="codeSummary">View code</summary>
-            <pre class="codePre"><code>// Paste your full code here for App 2.
-</code></pre>
-          </details>
-        </article>
+            <pre class="codePre"><code>
 
-        <!-- APP 3 -->
-        <article class="card subtle">
-          <div class="gameTop">
-            <h3>App 3: Example App Name</h3>
-            <span class="badge">Build</span>
-          </div>
+@echo off
+setlocal EnableExtensions EnableDelayedExpansion
+color 0A
+title Tecu Toolbox
 
-          <p class="muted">Example description. Replace this with what the app does.</p>
+set "BASE=%~dp0"
 
-          <div class="actions">
-            <a class="pill" href="downloads/App%203.rar" download>Download</a>
-          </div>
+:MENU
+cls
+echo ==========================================
+echo           TECU TOOLBOX  v1.1
+echo ==========================================
+echo Folder: %BASE%
+echo.
+echo  [1] PC Specs + Health + Recent Activity (Report + Console)
+echo  [2] Show ALL Wi-Fi profiles + passwords (Report + Console)
+echo  [3] Start Chrome + restore last tabs (Ctrl+Shift+T)
+echo  [4] Clean caches (Chrome/Discord/IntelliJ/Spotify/Windows/Update)  [Admin]
+echo  [5] Explorer repair (thumb/icon cache + restart explorer)
+echo.
+echo  [X] Exit
+echo ==========================================
+echo.
+set /p "CH=Choose an option: "
 
-          <p class="muted" style="margin-top:10px;">
-            Or click this link mor manual download:<br>
-            <a class="link" href="https://stefantecu.github.io/downloads/App%203.rar" target="_blank" rel="noopener noreferrer">
-              https://stefantecu.github.io/downloads/App%203.rar
-            </a>
-          </p>
+if /I "%CH%"=="X" goto END
+if "%CH%"=="1" goto OPT1
+if "%CH%"=="2" goto OPT2
+if "%CH%"=="3" goto OPT3
+if "%CH%"=="4" goto OPT4
+if "%CH%"=="5" goto OPT5
 
-          <details class="codeBox">
-            <summary class="codeSummary">View code</summary>
-            <pre class="codePre"><code>// Paste your full code here for App 3.
-</code></pre>
-          </details>
-        </article>
+echo.
+echo Invalid option. Press any key...
+pause >nul
+goto MENU
 
-        <!-- APP 4 -->
-        <article class="card subtle">
-          <div class="gameTop">
-            <h3>App 4: Example App Name</h3>
-            <span class="badge">Build</span>
-          </div>
 
-          <p class="muted">Example description. Replace this with what the app does.</p>
+REM ==========================================================
+REM  OPTION 1: PC report (console + log in same folder)
+REM  No tee pipeline. No Format-Table/List. No console break.
+REM ==========================================================
+:OPT1
+cls
 
-          <div class="actions">
-            <a class="pill" href="downloads/App%204.rar" download>Download</a>
-          </div>
+for /f %%T in ('powershell -NoProfile -Command "Get-Date -Format yyyy-MM-dd_HH-mm-ss"') do set "TS=%%T"
+set "OUT=%BASE%PC_Report_%TS%.txt"
 
-          <p class="muted" style="margin-top:10px;">
-            Or click this link mor manual download:<br>
-            <a class="link" href="https://stefantecu.github.io/downloads/App%204.rar" target="_blank" rel="noopener noreferrer">
-              https://stefantecu.github.io/downloads/App%204.rar
-            </a>
-          </p>
+echo ==========================================
+echo  PC SPECS + HEALTH + RECENT ACTIVITY REPORT
+echo ==========================================
+echo Logging to: %OUT%
+echo.
 
-          <details class="codeBox">
-            <summary class="codeSummary">View code</summary>
-            <pre class="codePre"><code>// Paste your full code here for App 4.
-</code></pre>
-          </details>
-        </article>
+> "%OUT%" (
+  echo ==========================================
+  echo  PC SPECS + HEALTH + RECENT ACTIVITY REPORT
+  echo ==========================================
+  echo Generated: %date% %time%
+  echo.
+)
 
-        <!-- APP 5 -->
-        <article class="card subtle">
-          <div class="gameTop">
-            <h3>App 5: Example App Name</h3>
-            <span class="badge">Build</span>
-          </div>
+call :HR1 "%OUT%"
+call :LOG1 "%OUT%" "SUMMARY"
 
-          <p class="muted">Example description. Replace this with what the app does.</p>
+for /f "usebackq delims=" %%A in (`powershell -NoProfile -Command ^
+  "$os=(Get-CimInstance Win32_OperatingSystem).Caption; ^
+   $cpu=(Get-CimInstance Win32_Processor|Select-Object -First 1).Name; ^
+   $ram=[math]::Round((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory/1GB,2); ^
+   $boot=(Get-CimInstance Win32_OperatingSystem).LastBootUpTime; ^
+   $upt=(New-TimeSpan -Start $boot -End (Get-Date)); ^
+   $c=Get-CimInstance Win32_LogicalDisk -Filter ""DeviceID='C:'""; ^
+   $cFree=if($c){[math]::Round($c.FreeSpace/1GB,2)} else {'N/A'}; ^
+   $cSize=if($c){[math]::Round($c.Size/1GB,2)} else {'N/A'}; ^
+   'OS: ' + $os; ^
+   'CPU: ' + $cpu; ^
+   ('RAM: {0} GB' -f $ram); ^
+   ('C: Free/Size: {0} GB / {1} GB' -f $cFree,$cSize); ^
+   ('Uptime: {0}d {1}h {2}m' -f $upt.Days,$upt.Hours,$upt.Minutes)"`) do (
+  call :LOG1 "%OUT%" "%%A"
+)
 
-          <div class="actions">
-            <a class="pill" href="downloads/App%205.rar" download>Download</a>
-          </div>
+echo.
+>> "%OUT%" echo.
 
-          <p class="muted" style="margin-top:10px;">
-            Or click this link mor manual download:<br>
-            <a class="link" href="https://stefantecu.github.io/downloads/App%205.rar" target="_blank" rel="noopener noreferrer">
-              https://stefantecu.github.io/downloads/App%205.rar
-            </a>
-          </p>
+call :SECTION1 "%OUT%" "BASIC SYSTEMINFO" "systeminfo"
+call :SECTION1 "%OUT%" "CPU" "wmic cpu get Name,NumberOfCores,NumberOfLogicalProcessors,MaxClockSpeed"
+call :SECTION1 "%OUT%" "RAM" "wmic computersystem get TotalPhysicalMemory"
+call :SECTION1 "%OUT%" "GPU" "wmic path win32_videocontroller get Name,DriverVersion,AdapterRAM"
+call :SECTION1 "%OUT%" "MOTHERBOARD" "wmic baseboard get Manufacturer,Product,SerialNumber"
+call :SECTION1 "%OUT%" "BIOS" "wmic bios get Manufacturer,SMBIOSBIOSVersion,SerialNumber"
+call :SECTION1 "%OUT%" "DISKS" "wmic diskdrive get Model,Size,InterfaceType,MediaType"
+call :SECTION1 "%OUT%" "DISK FREE SPACE" "wmic logicaldisk get Name,FileSystem,Size,FreeSpace"
+call :SECTION1 "%OUT%" "NETWORK (IPCONFIG /ALL)" "ipconfig /all"
 
-          <details class="codeBox">
-            <summary class="codeSummary">View code</summary>
-            <pre class="codePre"><code>// Paste your full code here for App 5.
-</code></pre>
-          </details>
-        </article>
+call :HR1 "%OUT%"
+call :LOG1 "%OUT%" "TOP PROCESSES BY CPU (TOP 10)"
+call :HR1 "%OUT%"
+powershell -NoProfile -Command ^
+"Get-Process | Sort-Object CPU -Descending | Select-Object -First 10 | ForEach-Object { ^
+'{0,-28} ID={1,-6} CPU={2,-8} RAM={3}MB' -f $_.Name,$_.Id,[int]$_.CPU,[int]($_.WorkingSet/1MB) }" ^
+| call :PIPELOG1 "%OUT%"
+
+echo.
+>> "%OUT%" echo.
+
+call :HR1 "%OUT%"
+call :LOG1 "%OUT%" "TOP PROCESSES BY RAM (TOP 10)"
+call :HR1 "%OUT%"
+powershell -NoProfile -Command ^
+"Get-Process | Sort-Object WorkingSet -Descending | Select-Object -First 10 | ForEach-Object { ^
+'{0,-28} ID={1,-6} RAM={2}MB' -f $_.Name,$_.Id,[int]($_.WorkingSet/1MB) }" ^
+| call :PIPELOG1 "%OUT%"
+
+echo.
+>> "%OUT%" echo.
+
+call :HR1 "%OUT%"
+call :LOG1 "%OUT%" "RECENT SYSTEM EVENTS (LAST 50)"
+call :HR1 "%OUT%"
+powershell -NoProfile -Command ^
+"Get-WinEvent -LogName System -MaxEvents 50 | ForEach-Object { ^
+'[{0}] {1} {2} ID={3}' -f $_.TimeCreated,$_.LevelDisplayName,$_.ProviderName,$_.Id }" ^
+| call :PIPELOG1 "%OUT%"
+
+echo.
+>> "%OUT%" echo.
+
+call :HR1 "%OUT%"
+call :LOG1 "%OUT%" "RECENT APPLICATION EVENTS (LAST 50)"
+call :HR1 "%OUT%"
+powershell -NoProfile -Command ^
+"Get-WinEvent -LogName Application -MaxEvents 50 | ForEach-Object { ^
+'[{0}] {1} {2} ID={3}' -f $_.TimeCreated,$_.LevelDisplayName,$_.ProviderName,$_.Id }" ^
+| call :PIPELOG1 "%OUT%"
+
+echo.
+>> "%OUT%" echo.
+
+call :SECTION1 "%OUT%" "INSTALLED UPDATES (HOTFIXES)" "wmic qfe list brief /format:table"
+call :SECTION1 "%OUT%" "WER REPORT QUEUE (MAY BE EMPTY)" "dir /a ""%ProgramData%\Microsoft\Windows\WER\ReportQueue"" 2>nul"
+
+call :HR1 "%OUT%"
+call :LOG1 "%OUT%" "DONE. Report saved:"
+call :LOG1 "%OUT%" "%OUT%"
+call :HR1 "%OUT%"
+
+echo.
+echo Press any key to return to menu...
+pause >nul
+goto MENU
+
+
+REM ==========================================================
+REM  OPTION 2: Wi-Fi profiles + passwords (console + log)
+REM ==========================================================
+:OPT2
+cls
+for /f %%T in ('powershell -NoProfile -Command "Get-Date -Format yyyy-MM-dd_HH-mm-ss"') do set "TS=%%T"
+set "WOUT=%BASE%WiFi_Profiles_%TS%.txt"
+
+echo ==========================================
+echo  SAVED WI-FI PROFILES + PASSWORDS
+echo ==========================================
+echo Logging to: %WOUT%
+echo.
+
+> "%WOUT%" (
+  echo ==========================================
+  echo  SAVED WI-FI PROFILES + PASSWORDS
+  echo ==========================================
+  echo Generated: %date% %time%
+  echo.
+)
+
+REM List profiles (English Windows label)
+for /f "tokens=1,* delims=:" %%A in ('netsh wlan show profiles ^| findstr /C:"All User Profile"') do (
+    set "p=%%B"
+    set "p=!p:~1!"
+    if not "!p!"=="" call :SHOWPASS2 "!p!" "%WOUT%"
+)
+
+echo.
+echo Press any key to return to menu...
+pause >nul
+goto MENU
+
+:SHOWPASS2
+set "PROFILE=%~1"
+set "LOG=%~2"
+set "PASS="
+
+for /f "tokens=1,* delims=:" %%K in ('netsh wlan show profile name^="%PROFILE%" key^=clear ^| findstr /C:"Key Content"') do (
+    set "PASS=%%L"
+)
+
+if defined PASS (
+    set "PASS=!PASS:~1!"
+) else (
+    set "PASS=<none or not available>"
+)
+
+echo all user profile: %PROFILE% ^| password: !PASS!
+>> "%LOG%" echo all user profile: %PROFILE% ^| password: !PASS!
+exit /b
+
+
+REM ==========================================================
+REM  OPTION 3: Chrome start + restore last tabs (fixed quoting)
+REM ==========================================================
+:OPT3
+cls
+echo ------------------------------------------
+echo CHROME: START + RESTORE LAST TABS
+echo ------------------------------------------
+echo.
+
+set "CHROME_EXE=%ProgramFiles%\Google\Chrome\Application\chrome.exe"
+if not exist "%CHROME_EXE%" set "CHROME_EXE=%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe"
+if not exist "%CHROME_EXE%" set "CHROME_EXE=%LocalAppData%\Google\Chrome\Application\chrome.exe"
+
+if not exist "%CHROME_EXE%" (
+  echo Chrome not found. Check installation path.
+  echo Press any key...
+  pause >nul
+  goto MENU
+)
+
+start "" "%CHROME_EXE%"
+timeout /t 2 >nul
+
+REM IMPORTANT: No caret line breaks inside the PowerShell command.
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ws=New-Object -ComObject WScript.Shell; for($i=0;$i -lt 30;$i++){ if($ws.AppActivate('Chrome')){break}; Start-Sleep -Milliseconds 200 }; for($k=0;$k -lt 1;$k++){ $ws.SendKeys('^+t'); Start-Sleep -Milliseconds 250 }"
+
+echo.
+echo Done. Tip: Chrome Settings ^> On startup ^> Continue where you left off (most reliable).
+echo Press any key to return to menu...
+pause >nul
+goto MENU
+
+
+REM ==========================================================
+REM  OPTION 4: Master cache cleaner (Admin required)
+REM ==========================================================
+:OPT4
+cls
+echo ------------------------------------------
+echo CACHE CLEANER (MASTER)
+echo ------------------------------------------
+echo.
+
+call :ELEVATE
+if errorlevel 1 goto MENU
+
+taskkill /IM chrome.exe /F >nul 2>&1
+taskkill /IM discord.exe /F >nul 2>&1
+taskkill /IM spotify.exe /F >nul 2>&1
+taskkill /IM idea64.exe /F >nul 2>&1
+timeout /t 2 >nul
+
+del /q /s "%localappdata%\Spotify\Storage\*" >nul 2>&1
+
+del /q /s "%localappdata%\Google\Chrome\User Data\Default\Cache\*" >nul 2>&1
+del /q /s "%localappdata%\Google\Chrome\User Data\Default\Code Cache\*" >nul 2>&1
+del /q /s "%localappdata%\Google\Chrome\User Data\Default\GPUCache\*" >nul 2>&1
+
+del /q /s "%appdata%\discord\Cache\*" >nul 2>&1
+del /q /s "%appdata%\discord\Code Cache\*" >nul 2>&1
+del /q /s "%appdata%\discord\GPUCache\*" >nul 2>&1
+
+for /d %%i in ("%localappdata%\JetBrains\IntelliJIdea*") do (
+  rmdir /s /q "%%i\caches" >nul 2>&1
+  rmdir /s /q "%%i\logs" >nul 2>&1
+)
+
+del /q /s "%temp%\*" >nul 2>&1
+rmdir /s /q "%temp%" >nul 2>&1
+mkdir "%temp%" >nul 2>&1
+del /q /s "%localappdata%\Temp\*" >nul 2>&1
+
+del /q /s "%localappdata%\D3DSCache\*" >nul 2>&1
+
+net stop wuauserv >nul 2>&1
+net stop bits >nul 2>&1
+del /q /s "C:\Windows\SoftwareDistribution\Download\*" >nul 2>&1
+net start wuauserv >nul 2>&1
+net start bits >nul 2>&1
+
+echo.
+echo Done. Press any key to return to menu...
+pause >nul
+goto MENU
+
+
+REM ==========================================================
+REM  OPTION 5: Explorer repair
+REM ==========================================================
+:OPT5
+cls
+echo ------------------------------------------
+echo EXPLORER REPAIR
+echo ------------------------------------------
+echo.
+
+taskkill /IM explorer.exe /F >nul 2>&1
+timeout /t 2 >nul
+del /q "%localappdata%\Microsoft\Windows\Explorer\thumbcache_*.db" >nul 2>&1
+del /q "%localappdata%\Microsoft\Windows\Explorer\iconcache_*.db" >nul 2>&1
+start explorer.exe
+
+echo.
+echo Explorer restarted and caches cleared.
+echo Press any key to return to menu...
+pause >nul
+goto MENU
+
+
+REM =========================
+REM Helpers (Option 1 only)
+REM =========================
+:LOG1
+REM Args: logfile, text
+echo %~2
+>> "%~1" echo %~2
+exit /b
+
+:HR1
+REM Args: logfile
+echo ------------------------------------------
+>> "%~1" echo ------------------------------------------
+exit /b
+
+:SECTION1
+REM Args: logfile, title, command
+echo.
+echo ==========================================
+echo  %~2
+echo ==========================================
+echo.
+
+>> "%~1" echo.
+>> "%~1" echo ==========================================
+>> "%~1" echo  %~2
+>> "%~1" echo ==========================================
+>> "%~1" echo.
+
+REM Console run
+cmd /c %~3
+
+REM Log run (stable)
+>> "%~1" cmd /c %~3 2>&1
+exit /b
+
+:PIPELOG1
+REM Args: logfile
+for /f "usebackq delims=" %%L in (`more`) do (
+  echo %%L
+  >> "%~1" echo %%L
+)
+exit /b
+
+
+REM =========================
+REM Admin elevation helper
+REM =========================
+:ELEVATE
+net session >nul 2>&1
+if %errorlevel% neq 0 (
+  echo Requesting Administrator privileges...
+  powershell -NoProfile -Command "Start-Process '%~f0' -Verb RunAs"
+  exit /b 1
+)
+exit /b 0
+
+
+:END
+endlocal
+exit /b
+
+
       </div>
     </section>
   </main>
