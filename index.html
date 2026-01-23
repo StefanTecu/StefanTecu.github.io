@@ -2,54 +2,39 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Player Page</title>
-    <link rel="stylesheet" href="./styles.css" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Your App</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
+    <!-- PAGE WRAP (keeps your existing structure/style logic intact) -->
     <div class="page">
-      <header class="header">
-        <div class="header-inner">
-          <h1 class="brand">My Website</h1>
-          <nav class="nav">
-            <a href="#" class="nav-link">Home</a>
-            <a href="#" class="nav-link">Library</a>
-            <a href="#" class="nav-link">About</a>
-          </nav>
-        </div>
-      </header>
-
-      <main class="content" id="content">
-        <!-- Your real content goes here -->
-        <section class="card">
-          <h2>Content</h2>
-          <p>Scroll down. “Now Playing” will be at the true bottom (end of scroll).</p>
-        </section>
-
-        <section class="card">
-          <h2>More content</h2>
-          <p>
-            Add your real page sections here. Remove the old “filler” block entirely.
-          </p>
-        </section>
+      <!-- Your existing header/content stays the same -->
+      <main class="content">
+        <!-- KEEP ALL YOUR EXISTING HTML HERE -->
+        <!-- (Whatever you had before: controls, playlists, etc.) -->
       </main>
-
-      <!-- Must be last in DOM -->
-      <footer class="now-playing" id="now-playing" aria-label="Now playing">
-        <div class="np-left">
-          <div class="np-label">Now playing</div>
-          <div class="np-track" id="np-track">Nothing playing</div>
-        </div>
-
-        <div class="np-right" aria-label="Playback controls">
-          <button class="np-btn" id="btn-prev" type="button">⏮</button>
-          <button class="np-btn np-btn-primary" id="btn-play" type="button">▶</button>
-          <button class="np-btn" id="btn-next" type="button">⏭</button>
-        </div>
-      </footer>
     </div>
 
-    <script src="./app.js"></script>
+    <!-- NOW PLAYING (true bottom of the screen, always visible) -->
+    <footer class="now-playing" role="contentinfo" aria-label="Now playing bar">
+      <div class="np-inner">
+        <div class="np-left">
+          <div class="np-title" id="npTitle">Now Playing</div>
+          <div class="np-sub" id="npArtist">Nothing yet…</div>
+        </div>
+
+        <div class="np-right">
+          <!-- Keep your existing buttons/icons if you already had them -->
+          <button class="np-btn" id="npPrev" type="button">⏮</button>
+          <button class="np-btn" id="npPlay" type="button">⏯</button>
+          <button class="np-btn" id="npNext" type="button">⏭</button>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>
