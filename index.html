@@ -1,40 +1,55 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover"
-    />
-    <title>Your App</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tecu's Repo</title>
 
-  <body>
-    <!-- PAGE WRAP (keeps your existing structure/style logic intact) -->
-    <div class="page">
-      <!-- Your existing header/content stays the same -->
-      <main class="content">
-        <!-- KEEP ALL YOUR EXISTING HTML HERE -->
-        <!-- (Whatever you had before: controls, playlists, etc.) -->
-      </main>
+  <link rel="icon" href="favicon.png" type="image/png" />
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Tecu's Repo" />
+  <meta property="og:description" content="Home hub for music drops and game builds." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="favicon.png" />
+</head>
+
+<body>
+  <header class="top">
+    <div class="wrap">
+      <h1 class="title">Tecu’s Repo</h1>
+      <nav class="menu" aria-label="Main">
+        <a class="pill" href="index.html" aria-current="page">Home</a>
+        <a class="pill" href="music.html">Music</a>
+        <a class="pill" href="games.html">Games</a>
+        <a class="pill" href="info.html">Contact</a>
+      </nav>
     </div>
+  </header>
 
-    <!-- NOW PLAYING (true bottom of the screen, always visible) -->
-    <footer class="now-playing" role="contentinfo" aria-label="Now playing bar">
-      <div class="np-inner">
-        <div class="np-left">
-          <div class="np-title" id="npTitle">Now Playing</div>
-          <div class="np-sub" id="npArtist">Nothing yet…</div>
-        </div>
+  <main class="wrap">
+    <section class="card">
+      <h2>Home</h2>
 
-        <div class="np-right">
-          <!-- Keep your existing buttons/icons if you already had them -->
-          <button class="np-btn" id="npPrev" type="button">⏮</button>
-          <button class="np-btn" id="npPlay" type="button">⏯</button>
-          <button class="np-btn" id="npNext" type="button">⏭</button>
-        </div>
+      <div class="card subtle">
+        <p><b>Tf is thid?</b> I am as confused as you are.</p>
+        <p><b>Music:</b> songs I drop over time and unreleased projects.</p>
+        <p><b>Games:</b> my games (Football Betting Simulator in particular).</p>
       </div>
-    </footer>
-  </body>
+
+      <div class="hint">
+        Tip: go to <code>Music</code> or <code>Games</code> or <code>Whatever</code> for more content.
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <span>© <span id="year"></span> Tecu</span>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
 </html>
