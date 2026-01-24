@@ -124,26 +124,28 @@ function renderSongTable(){
   if (!tbodyEl) return;
 
   tbodyEl.innerHTML = "";
+
   sortedSongs().forEach(song => {
     const tr = document.createElement("tr");
 
-    // Play button FIRST
-const tdPlay = document.createElement("td");
-const btn = document.createElement("button");
-const playing = currentSong && currentSong.file === song.file && !audioEl.paused;
-btn.textContent = playing ? "Pause" : "Play";
-btn.addEventListener("click", () => playSong(song));
-tdPlay.appendChild(btn);
-tr.appendChild(tdPlay);
+    // ✅ Play button FIRST column
+    const tdPlay = document.createElement("td");
+    const btn = document.createElement("button");
 
-// Then song data
-["name","artist","stage","version","releaseDate"].forEach(k => {
-  const td = document.createElement("td");
-  td.textContent = song[k];
-  tr.appendChild(td);
-});
+    const playing = currentSong && currentSong.file === song.file && audioEl && !audioEl.paused;
+    btn.textContent = playing ? "Pause" : "Play";
+    btn.addEventListener("click", () => playSong(song));
 
+    tdPlay.appendChild(btn);
     tr.appendChild(tdPlay);
+
+    // Then the rest of the columns
+    ["name","artist","stage","version","releaseDate"].forEach(k => {
+      const td = document.createElement("td");
+      td.textContent = song[k];
+      tr.appendChild(td);
+    });
+
     tbodyEl.appendChild(tr);
   });
 
